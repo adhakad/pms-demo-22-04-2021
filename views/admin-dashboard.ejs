@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link type="text/css" rel="stylesheet" href="sty.css">
+    <link rel="stylesheet" rel="stylesheet" href="styleses.css">
+    <link rel="stylesheet" rel="stylesheet" href="toggle.css">
+    <style>
+      .clearfix{
+         overflow: auto;
+      }
+      .taskrow{
+        height: 300px;
+        margin-top: 100px;
+        color:#918f96;
+        border: 3px solid #d8d8d8;
+        border-radius: 20px;
+      }
+   </style>
+</head>
+<body style="background-color: rgb(250, 248, 252);">
+
+
+  <div class="overlay menu">
+    <ul>
+      <li><a href="/studentUser">Add Student</a></li>
+      <li><a href="/teacher">Add Teacher</a></li>
+      <li><a href="/classTeacher">Add Class Teacher</a></li>
+      <li><a href="/totalAdminClass">Create All Class</a></li>
+    </ul>
+  </div>
+  <div class="top-nav clearfix"><h5 style="color:#fff;margin-left:8%;font-size: 50px;color: rgb(66, 15, 184);">TechBista</h5></div>
+
+
+
+<div style="height: 10vh;"></div>
+
+    <div class="container">
+      <div class="row">
+        <h1>All Teacher's List</h1>
+        <br>
+        <div class="tblData" style="height: 200px;">
+          <div class="cards">
+            <div id="abc"></div>
+            <div id="class_teacher_status"></div>
+            <div id="abcde"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+ 
+
+
+
+
+    <!--<div class="uk-container"><label class="uk-switch" for="default-3"><input type="checkbox" id="default-3"><div class="uk-switch-slider uk-switch-big"></div></label></div>-->
+    
+    
+  <nav class="bnav">
+    <div class="bnav-item">
+      <a class="bnav-link-active"><i class="fa fa-laptop icon"></i>Teacher</a>
+    </div>
+    <div class="bnav-item">
+      <a href="/totalAdminClassList" class="bnav-link"><i class="fa fa-link icon"></i>Classes</a>
+    </div>
+    <div class="bnav-item">
+      <a href="/studentList" class="bnav-link"><i class="fa fa-envelope"></i>Student</a>
+    </div>
+     <div class="bnav-item">
+      <a href="#" class="bnav-link"><i class="fa fa-book icon"></i>Demo</a>
+    </div>
+    <div class="toggle">
+      <div class="kebab menu">
+        <figure></figure>
+        <figure class="middle"></figure>
+        <figure></figure>
+      </div>
+      <div class="menu">More</div>
+    </div>
+  </nav>
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script src="https://cdn.ckeditor.com/4.9.1/standard/ckeditor.js"></script>
+  <script src="main.js" defer></script>
+
+
+  <script>
+    $(document).ready(function(){
+    
+    
+    
+    getdata();
+    
+    function getdata(){
+    $.ajax({
+    type : "GET",
+    url : "/admin-dashboard/get",
+    dataType:'json',
+    success:function(response){
+    if(response.msg=='success'){
+      if(response.data==undefined || response.data==null || response.data==''){
+          $('.tblData').hide();
+      }else{
+         $('.tblData').show();
+      $.each(response.data,function(index,data){
+          var url = url+data._id;
+          index+=1;
+          var teacher_status =data.teacher_status;
+          var class_teacher_status =data.class_teacher_status;
+          if(teacher_status=='disabled' && class_teacher_status=='inactive'){
+            $('.cards').append("<div class='taskrow'><p>"+ index +"</p><h2>"+data.teachername+"</td><td>"+data.teacher_uid+"</h2>"+"<a data-toggle='modal' data-target='#"+data.teacher_uid+"'><i class='fa fa-trash-o' style='color:#918f96;font-size:45px;margin-left:80%;'></i></a>"+"<button class=' btn btn-danger' data-toggle='modal' data-target='#"+data._id+"'>"+data.teacher_status+"</button>"+"<button class=' btn btn-danger' data-toggle='modal' data-target='#"+data._id+data.teacher_uid+"'>"+data.class_teacher_status+"</button>"+"<div style='margin-top:50px;' class='uk-container'><label class='uk-switch' for='default-3'><input type='checkbox' id='default-3'><div class='uk-switch-slider uk-switch-big'></div></label></div></div>");
+          }else if (teacher_status=='disabled' && class_teacher_status=='active'){
+            $('.cards').append("<div class='taskrow'><p>"+ index +"</p><h2>"+data.teachername+"</td><td>"+data.teacher_uid+"</h2>"+"<a data-toggle='modal' data-target='#"+data.teacher_uid+"'><i class='fa fa-trash-o' style='color:#918f96;font-size:45px;margin-left:80%;'></i></a>"+"<button class=' btn btn-danger' data-toggle='modal' data-target='#"+data._id+"'>"+data.teacher_status+"</button>"+"<div><a style='font-size:30px;'>Active</a><div style='margin-top:50px;display: inline-block;'><label class='uk-switch1' for='default-31'><input type='checkbox' id='default-31' class='uk-container1' data-toggle='modal' data-target='#"+data._id+data.teacher_uid+"'><div class='uk-switch-slider1 uk-switch-big1'></div></label></div></div></div>");
+          }else if (teacher_status=='enabled' && class_teacher_status=='inactive'){
+            $('.cards').append("<div class='taskrow'><p>"+ index +"</p><h2>"+data.teachername+"</td><td>"+data.teacher_uid+"</h2>"+"<a data-toggle='modal' data-target='#"+data.teacher_uid+"'><i class='fa fa-trash-o' style='color:#918f96;font-size:45px;margin-left:80%;'></i></a>"+"<button class=' btn btn-success' data-toggle='modal' data-target='#"+data._id+"'>"+data.teacher_status+"</button>"+"<button class=' btn btn-danger' data-toggle='modal' data-target='#"+data._id+data.teacher_uid+"'>"+data.class_teacher_status+"</button>"+"</div>");
+          }else{
+            $('.cards').append("<div class='taskrow'><p>"+ index +"</p><h2>"+data.teachername+"</td><td>"+data.teacher_uid+"</h2>"+"<a data-toggle='modal' data-target='#"+data.teacher_uid+"'><i class='fa fa-trash-o' style='color:#918f96;font-size:45px;margin-left:80%;'></i></a>"+"<button class=' btn btn-success' data-toggle='modal' data-target='#"+data._id+"'>"+data.teacher_status+"</button>"+"<button class=' btn btn-success' data-toggle='modal' data-target='#"+data._id+data.teacher_uid+"'>"+data.class_teacher_status+"</button>"+"</div>");
+          }
+    
+          if(teacher_status=='disabled'){
+            $('#abc').append("<div class='modal fade' id="+data._id+" role='dialog'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button> <h4 class='modal-title'>abc</h4></div><div class='modal-body'>abc</div><div class='modal-footer'><button class='enable_t_status btn btn-danger'  value='"+data._id+"'>"+data.teacher_status+"</button></div></div></div></div>");
+          }else{
+            $('#abc').append("<div class='modal fade' id="+data._id+" role='dialog'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button> <h4 class='modal-title'>abc</h4></div><div class='modal-body'>abc</div><div class='modal-footer'><button class='disable_t_status btn btn-success'  value='"+data._id+"'>"+data.teacher_status+"</button></div></div></div></div>");
+          }
+    
+          if(class_teacher_status=='inactive'){
+            $('#class_teacher_status').append("<div class='modal fade' id="+data._id+data.teacher_uid+" role='dialog'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button> <h4 class='modal-title'>abc</h4></div><div class='modal-body'>abc</div><div class='modal-footer'><button class='active_c_t_status btn btn-danger'  value='"+data._id+"'>"+data.class_teacher_status+"</button></div></div></div></div>");
+          }else{
+            $('#class_teacher_status').append("<div class='modal fade' id="+data._id+data.teacher_uid+" role='dialog'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button> <h4 class='modal-title'>abc</h4></div><div class='modal-body'>abc</div><div class='modal-footer'><button class='inactive_c_t_status btn btn-success'  value='"+data._id+"'>"+data.class_teacher_status+"</button></div></div></div></div>");
+          }
+            
+          $('#abcde').append("<div class='modal fade' id="+data.teacher_uid+" role='dialog'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button> <h4 class='modal-title'>abc</h4></div><div class='modal-body'>abc</div><div class='modal-footer'><button class='del btn btn-danger'  value='"+data._id+"'>delete</button></div></div></div></div>");                     
+      });
+    }
+    }
+    },
+    error:function(response){
+        alert('server error');
+    }
+    });
+    }
+    /*----------------------------------------------------------------------------*/
+    $(document).on('click','button.del',function(){
+    var id = $(this).parent().find('button.del').val();
+    $.ajax({
+    url:'/admin-dashboard/delete',
+    method:'delete',
+    dataType:'json',
+    data:{'id':id},
+    success:function(response){
+    if(response.msg=='success'){
+      location.reload();
+    }else{
+      alert('data not get deleted');
+    }
+    },
+    error:function(response){
+         alert('server error')   
+    }
+    });
+    });
+    
+    /*----------------------------------------------------------------------------*/
+    $(document).on('click','button.enable_t_status',function(){
+    var id = $(this).parent().find('button.enable_t_status').val();
+    $.ajax({
+    url:'/admin-dashboard/enable_t_status',
+      method:'put',
+      dataType:'json',
+      data:{'id':id},
+      success:function(response){
+        location.reload();
+      },
+      error:function(response){
+               alert('server error')   
+      }
+    });
+    });
+    
+    $(document).on('click','button.disable_t_status',function(){
+    var id = $(this).parent().find('button.disable_t_status').val();
+    $.ajax({
+    url:'/admin-dashboard/disable_t_status',
+      method:'put',
+      dataType:'json',
+      data:{'id':id},
+      success:function(response){
+        location.reload();
+      },
+      error:function(response){
+               alert('server error')   
+      }
+    });
+    });
+    
+    
+    $(document).on('click','button.active_c_t_status',function(){
+    var id = $(this).parent().find('button.active_c_t_status').val();
+    $.ajax({
+    url:'/admin-dashboard/active_c_t_status',
+      method:'put',
+      dataType:'json',
+      data:{'id':id},
+      success:function(response){
+        location.reload();
+      },
+      error:function(response){
+               alert('server error')   
+      }
+    });
+    });
+    
+    $(document).on('click','button.inactive_c_t_status',function(){
+    var id = $(this).parent().find('button.inactive_c_t_status').val();
+    $.ajax({
+    url:'/admin-dashboard/inactive_c_t_status',
+      method:'put',
+      dataType:'json',
+      data:{'id':id},
+      success:function(response){
+        location.reload();
+      },
+      error:function(response){
+               alert('server error')   
+      }
+    });
+    });
+    
+    
+    
+    
+    });
+    </script>
+
+   
+  <script>
+    $(document).ready(function(){
+      $('.menu').click(function(){
+        $('.overlay').toggleClass('active');
+        $('ul').toggleClass('active');
+      })
+    })
+  </script>
+  </body>
+</html>
+     
